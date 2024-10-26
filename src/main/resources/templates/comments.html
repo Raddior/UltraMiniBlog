@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Comments</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .comment-form {
+            margin-top: 20px;
+        }
+        table {
+            margin-top: 20px;
+        }
+        .anonymous {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mt-4">Вітаємо,
+        <span th:text="${session.name != null ? session.name : 'Анонім'}">name</span>!
+    </h1>
+
+    <h3 class="mt-4">Коментарі</h3>
+
+    <!-- Форма для додавання коментаря -->
+    <form th:action="@{/comments}" method="post" class="comment-form form-inline">
+        <input type="text" name="comment" placeholder="Введіть коментар" class="form-control mr-2" required>
+        <button type="submit" class="btn btn-primary">Додати коментар</button>
+    </form>
+
+    <!-- Таблиця з коментарями -->
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Користувач</th>
+            <th>Коментар</th>
+            <th>Дата створення</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment : ${comments}">
+            <td th:text="${comment.id}"></td>
+            <td th:text="${comment.user != null ? comment.user.name : 'Анонім'}" class="anonymous"></td>
+            <td th:text="${comment.content}"></td>
+            <td th:text="${comment.createdAt}">Дата</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Кнопка для входу або виходу з облікового запису -->
+    <div th:if="${session.name == null}" class="mt-3">
+        <button class="btn btn-info" onclick="window.location.href='/login'">Увійти в акаунт</button>
+    </div>
+
+    <div th:if="${session.name != null}" class="mt-3">
+        <form th:action="@{/logout}" method="get">
+            <button type="submit" class="btn btn-warning">Вийти</button>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>
